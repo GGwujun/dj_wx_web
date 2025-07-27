@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/image/image",
     "pages/about/about",
     "pages/video/video",
     "pages/kj/kj"
@@ -22,6 +23,12 @@
         "text": "首页",
         "iconPath":"images/home_select.png",
         "selectedIconPath":"images/home.png"
+      },
+      {
+        "pagePath": "pages/image/image",
+        "text": "图集",
+        "iconPath":"images/problem_select.png",
+        "selectedIconPath":"images/problem.png"
       },
       {
         "pagePath": "pages/about/about",

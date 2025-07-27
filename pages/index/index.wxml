@@ -1,4 +1,8 @@
 <view class="container">
+  <view class="text-container">
+    <div>@粘贴分享网站，进行解析，点击下载保存到收集；</div>
+    <div>@如遇到问题请点击下面的“客服”联系我。</div>
+  </view>
   <!-- 轮播图 -->
   <swiper class="swiper-container" autoplay="true" interval="3000" circular="true">
     <swiper-item bindtap="onSwiperItemTap" data-index="0">
@@ -16,7 +20,7 @@
   </swiper>
 
   <!-- 输入框和按钮 -->
-  <textarea placeholder="请输入视频链接，支持抖音和TikTok" class="input-box" bindinput="onInputUrl" value="{{inputUrl}}"></textarea>
+  <textarea placeholder="请粘贴视频链接，支持抖音和TikTok" class="input-box" bindinput="onInputUrl" value="{{inputUrl}}"></textarea>
 
   <view class="button-container">
     <button class="parse-button" bindtap="onPasteAndParse">解析</button>

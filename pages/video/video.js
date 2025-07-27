@@ -283,27 +283,60 @@ Page({
       title: '加载广告中...'
     });
 
+    var log = wx.getRealtimeLogManager ? wx.getRealtimeLogManager() : null
+    log?.info?.apply(log, ['开始加载广告,广告id：', this.data.adUnitId])
+
+    if (!wx.createRewardedVideoAd) {
+      log?.info?.apply(log, ['广告组件不支持，跳过广告开始解析视频。广告id：', this.data.adUnitId])
+      callback();
+      return;
+    }
     const videoAd = wx.createRewardedVideoAd({
       adUnitId: this.data.adUnitId // 使用从请求得到的广告单元 ID
     });
 
-    videoAd.load()
+    videoAd.onLoad(() => {
+      log?.info?.apply(log, ['广告加载完毕。广告id：', this.data.adUnitId])
+    })
+
+    videoAd.onError((err) => {
+      wx.hideLoading();
+      log?.error?.apply(log, ['激励视频光告加载失败。广告id：', this.data.adUnitId, err])
+      wx.showToast({
+        title: '广告拉取失败，请稍后重试',
+        icon: 'none'
+      });
+    })
+
+    videoAd.show()
       .then(() => {
         wx.hideLoading();
-        return videoAd.show();
+        log?.info?.apply(log, ['加载广告完毕，开始显示广告视频'])
       })
       .catch(err => {
-        wx.hideLoading();
-        wx.showToast({
-          title: '广告加载失败，请稍后重试',
-          icon: 'none'
-        });
+        log?.error.apply(log, ['加载广告失败,失败重试', this.data.adUnitId, err])
+        // 失败重试
+        videoAd.load()
+          .then(() => {
+            wx.hideLoading();
+            log?.info?.apply(log, ['重试拉取广告成功'])
+            videoAd.show()
+          })
+          .catch(err => {
+            wx.hideLoading();
+            log?.error?.apply(log, ['重试拉取广告失败', err])
+            console.error('激励视频 广告显示失败', err);
+            wx.showToast({
+              title: '广告加载失败，请稍后重试',
+              icon: 'none'
+            });
+          })
       });
 
-    videoAd.offClose();
     videoAd.onClose((status) => {
       if (status && status.isEnded) {
         const currentTime = new Date().getTime();
+        log?.info.apply(log, ['广告观看完毕，开始解析视频', status, currentTime])
         wx.setStorageSync('hasWatchedAd', true);
         wx.setStorageSync('adWatchedTimestamp', currentTime);
         this.setData({
@@ -317,15 +350,6 @@ Page({
           icon: 'none'
         });
       }
-    });
-
-    videoAd.offError();
-    videoAd.onError((err) => {
-      wx.hideLoading();
-      wx.showToast({
-        title: '广告拉取失败，请稍后重试',
-        icon: 'none'
-      });
     });
   },
 
