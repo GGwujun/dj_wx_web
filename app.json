@@ -27,8 +27,8 @@
       {
         "pagePath": "pages/image/image",
         "text": "图集",
-        "iconPath":"images/problem_select.png",
-        "selectedIconPath":"images/problem.png"
+        "iconPath":"images/image.png",
+        "selectedIconPath":"images/image_select.png"
       },
       {
         "pagePath": "pages/about/about",
